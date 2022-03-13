@@ -1,0 +1,4 @@
+#ifndef STRING_H_gipu7c42v9n4tzcks94mz8sphbc3x8ft
+#define STRING_H_gipu7c42v9n4tzcks94mz8sphbc3x8ft
+
+#endif

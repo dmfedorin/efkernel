@@ -1,0 +1,47 @@
+@clean
+{
+        $(
+                "rm imed/* build/*"
+        );
+
+        !(
+                "finished cleaning"
+        );
+}
+
+@build
+{
+        %(
+                "src",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/% -ffreestanding"
+        );
+        
+        %(
+                "src/io",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding"
+        );
+        
+        `%(
+                "src/mem",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding"
+        );`
+
+        $(
+                "i686-elf-gcc -T linker.ld -o build/efkernel.bin imed/*.o -ffreestanding -nostdlib -lgcc"
+        );
+
+        !(
+                "finished building"
+        );
+}
+
+@main
+{
+        >(
+                clean,
+                build
+        );
+}
