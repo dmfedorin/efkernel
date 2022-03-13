@@ -23,14 +23,17 @@
                 "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding"
         );
         
-        `%(
-                "src/mem",
+        %(
+                "src/int",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding"
-        );`
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/int/% -ffreestanding -mno-red-zone -mgeneral-regs-only"
+        );
 
         $(
-                "i686-elf-gcc -T linker.ld -o build/efkernel.bin imed/*.o -ffreestanding -nostdlib -lgcc"
+                `this file rename is only here to save myself from the severe brainfrying of using gnu linker,
+                a bandaid fix is better than no fix at all`
+                "mv imed/main.c.o imed/00000000000000000main.o",
+                "i686-elf-gcc -Tlinker.ld -o build/efkernel.bin imed/*.o -ffreestanding -nostdlib -lgcc"
         );
 
         !(
