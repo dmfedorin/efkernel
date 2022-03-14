@@ -8,7 +8,7 @@
 
 static int textcursorpos = 0;
 
-// light gray on black by default
+/* light gray on black by default */
 static uint8_t attr = 0x7;
 
 void put_char(char c)
