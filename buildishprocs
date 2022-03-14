@@ -14,19 +14,19 @@
         %(
                 "src",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/% -ffreestanding"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/% -ffreestanding -std=c11"
         );
         
         %(
                 "src/io",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding -std=c11"
         );
         
         %(
                 "src/int",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/int/% -ffreestanding -mno-red-zone -mgeneral-regs-only"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/int/% -ffreestanding -mno-red-zone -mgeneral-regs-only -std=c11"
         );
 
         $(

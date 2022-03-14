@@ -1,7 +1,5 @@
 #include "io/text.h"
 
-#include <stdint.h>
-
 #define VID_MEM_PTR ((char *)0xb8000)
 #define TERM_WIDTH 80
 #define TERM_HEIGHT 25
@@ -35,6 +33,10 @@ void put_str(const char *s)
                         break;
                 }
         }
+}
+
+void put_hex(uint32_t h)
+{
 }
 
 void clear_screen(void)

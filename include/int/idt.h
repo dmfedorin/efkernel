@@ -1,5 +1,5 @@
-#ifndef IDT_H_wkc5pzq3aorispuhj9hjc9410xk61kwe
-#define IDT_H_wkc5pzq3aorispuhj9hjc9410xk61kwe
+#ifndef IDT_H_4gXG5sI6tOHCcb3DvVWjiFW3hyXrbNQe
+#define IDT_H_4gXG5sI6tOHCcb3DvVWjiFW3hyXrbNQe
 
 #include "isr.h"
 
@@ -7,7 +7,9 @@ void init_idt_default(void);
 void load_idt(void);
 
 enum idt_entry {
-        IDT_ENTRY_DIV_BY_0 = 0,
+        IDT_ENTRY_DIV_BY_0 = 0x0,
+        IDT_ENTRY_DEBUG = 0x1,
+        IDT_ENTRY_KEYBOARD = 0x21, /* pic has to have been remapped */
 };
 
 enum int_desc_gate_type {

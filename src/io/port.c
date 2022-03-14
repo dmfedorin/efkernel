@@ -49,7 +49,8 @@ uint32_t read_port_long(enum port p)
 }
 
 /* io port operations are slow, it is wise to wait on them to finish */
-void wait_port(enum port p)
+void wait_port_io(void)
 {
-        __asm__("outl %eax, $0x80\n");
+        __asm__("outl %0, $0x80\n"
+                : : "a" (0));
 }

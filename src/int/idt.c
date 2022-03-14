@@ -41,8 +41,8 @@ void load_idt(void)
                 .size = sizeof(idt) - 1,
         };
 
-        __asm__ ("lidt %0\n"
-                 : : "m" (idtr));
+        __asm__("lidt %0\n"
+                : : "m" (idtr));
 
         log_info("loaded idt");
 }

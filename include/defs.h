@@ -1,5 +1,5 @@
-#ifndef DEFS_H_6gx8vocbk5znrq3ty9tce03zg4af8hze
-#define DEFS_H_6gx8vocbk5znrq3ty9tce03zg4af8hze
+#ifndef DEFS_H_5Sd217saxjGcbXsJ07rG13nj25TqHATK
+#define DEFS_H_5Sd217saxjGcbXsJ07rG13nj25TqHATK
 
 #define KERNEL_CODE_SEG 0x8
 #define KERNEL_DATA_SEG 0x10
