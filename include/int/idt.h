@@ -10,7 +10,13 @@ enum idt_entry {
         IDT_ENTRY_DIV_BY_0 = 0,
 };
 
-void set_idt_entry_isr(enum idt_entry ent,
-                       void (*isr)(const struct int_frame intframe));
+enum int_desc_gate_type {
+        INT_DESC_GATE_TYPE_TASK = 0x85,
+        INT_DESC_GATE_TYPE_INT = 0x8e,
+        INT_DESC_GATE_TYPE_TRAP = 0x8f,
+};
+
+void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gatetype,
+                       void (*isr)(const struct int_frame *frame));
 
 #endif

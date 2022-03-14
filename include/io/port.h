@@ -15,7 +15,7 @@ uint16_t read_port_word(enum port p);
 void write_port_long(enum port p, uint32_t data);
 uint32_t read_port_long(enum port p);
 
-// io port operations are slow, it is wise to wait on them to finish
+/* io port operations are slow, it is wise to wait on them to finish */
 void wait_port(enum port p);
 
 #endif
