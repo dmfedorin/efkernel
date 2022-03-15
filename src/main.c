@@ -24,6 +24,6 @@ void main(void)
         __asm__("sti\n");
 
         log_info("sti");
-        
-        // int a = 3 / 0;
+
+        put_hex(0xdeadbeef);
 }
