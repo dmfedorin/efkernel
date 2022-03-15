@@ -3,7 +3,8 @@
 void write_port_byte(enum port p, uint8_t data)
 {
         __asm__("outb %0, %1\n"
-                : : "a" (data), "Nd" ((uint16_t)p));
+                :
+                : "a" (data), "Nd" ((uint16_t)p));
 }
 
 uint8_t read_port_byte(enum port p)
@@ -11,7 +12,8 @@ uint8_t read_port_byte(enum port p)
         uint8_t res;
 
         __asm__("inb %1, %0\n"
-                : "=a" (res) : "Nd" ((uint16_t)p));
+                : "=a" (res)
+                : "Nd" ((uint16_t)p));
 
         return res;
 }
@@ -19,7 +21,8 @@ uint8_t read_port_byte(enum port p)
 void write_port_word(enum port p, uint16_t data)
 {
         __asm__("outw %0, %1\n"
-                : : "a" (data), "Nd" ((uint16_t)p));
+                :
+                : "a" (data), "Nd" ((uint16_t)p));
 }
 
 uint16_t read_port_word(enum port p)
@@ -27,7 +30,8 @@ uint16_t read_port_word(enum port p)
         uint16_t res;
 
         __asm__("inw %1, %0\n"
-                : "=a" (res) : "Nd" ((uint16_t)p));
+                : "=a" (res)
+                : "Nd" ((uint16_t)p));
 
         return res;
 }
@@ -35,7 +39,8 @@ uint16_t read_port_word(enum port p)
 void write_port_long(enum port p, uint32_t data)
 {
         __asm__("outl %0, %1\n"
-                : : "a" (data), "Nd" ((uint16_t)p));
+                :
+                : "a" (data), "Nd" ((uint16_t)p));
 }
 
 uint32_t read_port_long(enum port p)
@@ -43,7 +48,8 @@ uint32_t read_port_long(enum port p)
         uint32_t res;
 
         __asm__("inl %1, %0\n"
-                : "=a" (res) : "Nd" (p));
+                : "=a" (res)
+                : "Nd" (p));
 
         return res;
 }
@@ -52,5 +58,6 @@ uint32_t read_port_long(enum port p)
 void wait_port_io(void)
 {
         __asm__("outl %0, $0x80\n"
-                : : "a" (0));
+                :
+                : "a" (0));
 }

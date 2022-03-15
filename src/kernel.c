@@ -16,7 +16,10 @@ struct cpu_regs get_cpu_regs(void)
                 "mov %%esi, %6\n"
                 "mov %%edi, %7\n"
                 : "=m" (regs.eax), "=m" (regs.ebx), "=m" (regs.ecx),
-                  "=m" (regs.edx)); /* FINISH LATER */
+                  "=m" (regs.edx), "=m" (regs.esp), "=m" (regs.ebp),
+                  "=m" (regs.esi), "=m" (regs.edi));
+
+        return regs;
 }
 
 void panic(const char *msg)
