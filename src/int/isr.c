@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "int/pic.h"
 #include "io/port.h"
+#include "io/ps2kb.h"
 
 __attribute__((interrupt)) void default_isr(const struct int_frame *frame)
 {
@@ -23,9 +24,9 @@ __attribute__((interrupt)) void debug_isr(const struct int_frame *frame)
 
 __attribute__((interrupt)) void keyboard_isr(const struct int_frame *frame)
 {
-        put_str("\r\x4dkey press\r\x70\n");
-        
         uint8_t scancode = read_port_byte(PORT_PS2_DATA);
+        
+        ps2_key_event(scancode);
         
         end_pic1_int();
 }
