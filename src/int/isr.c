@@ -25,8 +25,6 @@ __attribute__((interrupt)) void debug_isr(const struct int_frame *frame)
 __attribute__((interrupt)) void keyboard_isr(const struct int_frame *frame)
 {
         uint8_t scancode = read_port_byte(PORT_PS2_DATA);
-        
         ps2_key_event(scancode);
-        
         end_pic1_int();
 }

@@ -2,6 +2,7 @@
 
 #include "int/isr.h"
 #include "defs.h"
+#include <stdalign.h>
 #include "io/text.h"
 
 #define IDT_SIZE 256
@@ -25,7 +26,6 @@ void init_idt_default(void)
                         ._zero = 0,
                 };
         }
-
         log_info("initialized idt with default isr");
 }
 
@@ -40,10 +40,9 @@ void load_idt(void)
                 .offset = (uint32_t)idt,
                 .size = sizeof(idt) - 1,
         };
-
         __asm__("lidt %0\n"
-                : : "m" (idtr));
-
+                :
+                : "m" (idtr));
         log_info("loaded idt");
 }
 

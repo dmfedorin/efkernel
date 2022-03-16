@@ -34,6 +34,12 @@
                 ".c",
                 "i686-elf-gcc -o imed/%.o -Iinclude -c src/libc/% -ffreestanding -std=c11"
         );
+        
+        %(
+                "src/mem",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding -std=c11"
+        );
 
         $(
                 `this file rename is only here to save myself from the severe brainfrying of using gnu linker,

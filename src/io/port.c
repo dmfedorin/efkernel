@@ -10,11 +10,9 @@ void write_port_byte(enum port p, uint8_t data)
 uint8_t read_port_byte(enum port p)
 {
         uint8_t res;
-
         __asm__("inb %1, %0\n"
                 : "=a" (res)
                 : "Nd" ((uint16_t)p));
-
         return res;
 }
 
@@ -28,11 +26,9 @@ void write_port_word(enum port p, uint16_t data)
 uint16_t read_port_word(enum port p)
 {
         uint16_t res;
-
         __asm__("inw %1, %0\n"
                 : "=a" (res)
                 : "Nd" ((uint16_t)p));
-
         return res;
 }
 
@@ -46,11 +42,9 @@ void write_port_long(enum port p, uint32_t data)
 uint32_t read_port_long(enum port p)
 {
         uint32_t res;
-
         __asm__("inl %1, %0\n"
                 : "=a" (res)
                 : "Nd" (p));
-
         return res;
 }
 
