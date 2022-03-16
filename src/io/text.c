@@ -3,6 +3,7 @@
 #define VID_MEM_PTR ((char *)0xb8000)
 #define TERM_WIDTH 80
 #define TERM_HEIGHT 25
+#define TAB_SIZE 8
 
 static int textcursorpos = 0;
 
@@ -12,6 +13,14 @@ static uint8_t attr = 0x7;
 void put_char(char c)
 {
         switch (c) {
+        case '\b':
+                --textcursorpos;
+                *(VID_MEM_PTR + textcursorpos * 2) = '\0';
+                *(VID_MEM_PTR + textcursorpos * 2 + 1) = attr;
+                break;
+        case '\t':
+                textcursorpos += TAB_SIZE;
+                break;
         case '\n':
                 textcursorpos += TERM_WIDTH - textcursorpos % TERM_WIDTH;
                 break;
@@ -41,7 +50,6 @@ void put_hex(uint32_t h)
         /* loop backwards to account for little endianness */
         for (int i = 3; i >= 0; --i) {
                 uint8_t *b = (uint8_t *)&h + i;
-                
                 put_char(charmap[(*b & 0xf0) >> 4]);
                 put_char(charmap[*b & 0xf]);
         }
@@ -50,10 +58,8 @@ void put_hex(uint32_t h)
 void clear_screen(void)
 {
         textcursorpos = 0;
-
         for (int i = 0; i < TERM_WIDTH * TERM_HEIGHT; ++i)
                 put_char('\0');
-                
         textcursorpos = 0;
 }
 

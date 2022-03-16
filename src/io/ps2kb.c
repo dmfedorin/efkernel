@@ -2,6 +2,7 @@
 
 #include "io/text.h"
 #include "libc/string.h"
+#include <stdbool.h>
 
 #define USED_SET_1_KEYS 89
 
@@ -56,6 +57,8 @@ enum keycode {
         KEYCODE_LEFT_ALT,
         KEYCODE_SPACE,
         KEYCODE_CAPS_LOCK,
+        KEYCODE_NUM_LOCK,
+        KEYCODE_SCROLL_LOCK,
 
         KEYCODE_HYPHEN,
         KEYCODE_EQUALS,
@@ -69,7 +72,20 @@ enum keycode {
         KEYCODE_PERIOD,
         KEYCODE_SLASH,
 
+        KEYCODE_NUMPAD_0,
+        KEYCODE_NUMPAD_1,
+        KEYCODE_NUMPAD_2,
+        KEYCODE_NUMPAD_3,
+        KEYCODE_NUMPAD_4,
+        KEYCODE_NUMPAD_5,
+        KEYCODE_NUMPAD_6,
+        KEYCODE_NUMPAD_7,
+        KEYCODE_NUMPAD_8,
+        KEYCODE_NUMPAD_9,
         KEYCODE_NUMPAD_ASTERISK,
+        KEYCODE_NUMPAD_HYPHEN,
+        KEYCODE_NUMPAD_PLUS,
+        KEYCODE_NUMPAD_PERIOD,
 
         KEYCODE_F1,
         KEYCODE_F2,
@@ -115,12 +131,53 @@ void init_ps2_keyboard(enum keyboard_layout layout)
                         KEYCODE_SPACE, KEYCODE_CAPS_LOCK, KEYCODE_F1,
                         KEYCODE_F2, KEYCODE_F3, KEYCODE_F4, KEYCODE_F5,
                         KEYCODE_F6, KEYCODE_F7, KEYCODE_F8, KEYCODE_F9,
-                        KEYCODE_F10, /* finish later */
+                        KEYCODE_F10, KEYCODE_NUM_LOCK, KEYCODE_SCROLL_LOCK,
+                        KEYCODE_NUMPAD_7, KEYCODE_NUMPAD_8, KEYCODE_NUMPAD_9,
+                        KEYCODE_NUMPAD_HYPHEN, KEYCODE_NUMPAD_4,
+                        KEYCODE_NUMPAD_5, KEYCODE_NUMPAD_6,
+                        KEYCODE_NUMPAD_PLUS, KEYCODE_NUMPAD_1,
+                        KEYCODE_NUMPAD_2, KEYCODE_NUMPAD_3, KEYCODE_NUMPAD_0,
+                        KEYCODE_NUMPAD_PERIOD, KEYCODE_NULL, KEYCODE_NULL,
+                        KEYCODE_NULL, KEYCODE_F11, KEYCODE_F12,
                 };
-
                 memcpy(keymap, colemakkeymap, sizeof(keymap));
-
                 break;
+        }
+}
+
+bool keycode_is_alpha(enum keycode keycode)
+{
+        return keycode >= KEYCODE_A && keycode <= KEYCODE_Z;
+}
+
+bool keycode_is_num(enum keycode keycode)
+{
+        return keycode >= KEYCODE_0 && keycode <= KEYCODE_9;
+}
+
+bool keycode_is_numpad_num(enum keycode keycode)
+{
+        return keycode >= KEYCODE_NUMPAD_0 && keycode <= KEYCODE_NUMPAD_9;
+}
+
+char keycode_to_char(enum keycode keycode)
+{
+        if (keycode_is_alpha(keycode))
+                return keycode - KEYCODE_A + 'a';
+        else if (keycode_is_num(keycode))
+                return keycode - KEYCODE_0 + '0';
+        else if (keycode_is_numpad_num(keycode))
+                return keycode - KEYCODE_NUMPAD_0 + '0';
+
+        /* other keycodes arent as easy to handle and require dedicated
+         * cases
+         */
+        switch (keycode) {
+        case KEYCODE_BACKSPACE: return '\b';
+        case KEYCODE_TAB: return '\t';
+        case KEYCODE_ENTER: return '\n';
+
+        default: return '\0';
         }
 }
 
@@ -128,6 +185,5 @@ void ps2_key_event(uint8_t scancode)
 {
         if (scancode > USED_SET_1_KEYS - 1)
                 return;
-
-        put_hex(scancode);
+        put_char(keycode_to_char(keymap[scancode]));
 }
