@@ -168,7 +168,6 @@ static char keycode_to_char(enum keycode keycode)
                 return keycode - KEYCODE_0 + '0';
         else if (keycode_is_numpad_num(keycode))
                 return keycode - KEYCODE_NUMPAD_0 + '0';
-
         /* other keycodes arent as easy to handle and require dedicated
          * cases
          */
@@ -176,7 +175,6 @@ static char keycode_to_char(enum keycode keycode)
         case KEYCODE_BACKSPACE: return '\b';
         case KEYCODE_TAB: return '\t';
         case KEYCODE_ENTER: return '\n';
-
         default: return '\0';
         }
 }

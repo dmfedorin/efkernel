@@ -45,7 +45,6 @@ void put_hex(uint32_t h)
                 'c', 'd', 'e', 'f',
         };
         put_str("0x");
-        
         /* loop backwards to account for little endianness */
         for (int i = 3; i >= 0; --i) {
                 uint8_t *b = (uint8_t *)&h + i;
@@ -61,7 +60,6 @@ void put_hex_64(uint64_t h)
                 'c', 'd', 'e', 'f',
         };
         put_str("0x");
-
         /* loop backwards to account for little endianness */
         for (int i = 7; i >= 0; --i) {
                 uint8_t *b = (uint8_t *)&h + i;
