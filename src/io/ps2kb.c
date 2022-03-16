@@ -145,22 +145,22 @@ void init_ps2_keyboard(enum keyboard_layout layout)
         }
 }
 
-bool keycode_is_alpha(enum keycode keycode)
+static inline bool keycode_is_alpha(enum keycode keycode)
 {
         return keycode >= KEYCODE_A && keycode <= KEYCODE_Z;
 }
 
-bool keycode_is_num(enum keycode keycode)
+static inline bool keycode_is_num(enum keycode keycode)
 {
         return keycode >= KEYCODE_0 && keycode <= KEYCODE_9;
 }
 
-bool keycode_is_numpad_num(enum keycode keycode)
+static inline bool keycode_is_numpad_num(enum keycode keycode)
 {
         return keycode >= KEYCODE_NUMPAD_0 && keycode <= KEYCODE_NUMPAD_9;
 }
 
-char keycode_to_char(enum keycode keycode)
+static char keycode_to_char(enum keycode keycode)
 {
         if (keycode_is_alpha(keycode))
                 return keycode - KEYCODE_A + 'a';

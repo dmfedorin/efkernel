@@ -2,6 +2,7 @@
 #include "int/idt.h"
 #include "int/pic.h"
 #include "io/ps2kb.h"
+#include "mem/layout.h"
 
 void main(void)
 {
@@ -14,12 +15,13 @@ void main(void)
         set_idt_entry_isr(IDT_ENTRY_KEYBOARD, INT_DESC_GATE_TYPE_INT,
                           keyboard_isr);
         load_idt();
-
         remap_pic();
         mask_pic_ints(0b11111101, 0b11111111);
 
-        init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
-        
         __asm__("sti\n");
         log_info("enabled interrupts");
+        
+        init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
+
+        print_mem_layout();
 }

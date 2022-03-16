@@ -45,9 +45,25 @@ void put_hex(uint32_t h)
                 'c', 'd', 'e', 'f',
         };
         put_str("0x");
-
+        
         /* loop backwards to account for little endianness */
         for (int i = 3; i >= 0; --i) {
+                uint8_t *b = (uint8_t *)&h + i;
+                put_char(charmap[(*b & 0xf0) >> 4]);
+                put_char(charmap[*b & 0xf]);
+        }
+}
+
+void put_hex_64(uint64_t h)
+{
+        char charmap[16] = {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b',
+                'c', 'd', 'e', 'f',
+        };
+        put_str("0x");
+
+        /* loop backwards to account for little endianness */
+        for (int i = 7; i >= 0; --i) {
                 uint8_t *b = (uint8_t *)&h + i;
                 put_char(charmap[(*b & 0xf0) >> 4]);
                 put_char(charmap[*b & 0xf]);
