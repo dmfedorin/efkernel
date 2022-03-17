@@ -40,6 +40,18 @@
                 ".c",
                 "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding -std=c11 -pedantic"
         );
+        
+        %(
+                "src/filesys",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/filesys/% -ffreestanding -std=c11 -pedantic"
+        );
+        
+        %(
+                "src/sh",
+                ".c",
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/sh/% -ffreestanding -std=c11 -pedantic"
+        );
 
         $(
                 `this file rename is only here to save myself from the severe brainfrying of using gnu linker,

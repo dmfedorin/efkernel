@@ -3,6 +3,7 @@
 #include "io/text.h"
 #include "libc/string.h"
 #include <stdbool.h>
+#include "sh/sh.h"
 
 #define USED_SET_1_KEYS 89
 
@@ -175,6 +176,7 @@ static char keycode_to_char(enum keycode keycode)
         case KEYCODE_BACKSPACE: return '\b';
         case KEYCODE_TAB: return '\t';
         case KEYCODE_ENTER: return '\n';
+        case KEYCODE_SPACE: return ' ';
         default: return '\0';
         }
 }
