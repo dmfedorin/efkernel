@@ -1,3 +1,3 @@
 #include "mem/heap.h"
 
-/* create later */
+__asm__("jmp .\n");

@@ -110,7 +110,7 @@ void init_ps2_keyboard(enum keyboard_layout layout)
                 /* implement later */
                 break;
         case KEYBOARD_LAYOUT_COLEMAK:
-        default:
+        default:;
                 enum keycode colemakkeymap[USED_SET_1_KEYS] = {
                         KEYCODE_NULL, KEYCODE_ESC, KEYCODE_1, KEYCODE_2,
                         KEYCODE_3, KEYCODE_4, KEYCODE_5, KEYCODE_6, KEYCODE_7,
