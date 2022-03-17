@@ -17,7 +17,7 @@ static void init_ints(void)
                           keyboard_isr);
         load_idt();
         remap_pic();
-        mask_pic_ints(0b11111101, 0b11111111);
+        mask_pic_ints(~(1 << 1), 0);
         __asm__("sti\n");
         log_info("initialized interrupts");
 }

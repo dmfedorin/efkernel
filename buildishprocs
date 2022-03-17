@@ -14,31 +14,31 @@
         %(
                 "src",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/% -ffreestanding -std=c11"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/% -ffreestanding -std=c11 -pedantic"
         );
         
         %(
                 "src/io",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding -std=c11"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/io/% -ffreestanding -std=c11 -pedantic"
         );
         
         %(
                 "src/int",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/int/% -ffreestanding -mno-red-zone -mgeneral-regs-only -std=c11"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/int/% -ffreestanding -mno-red-zone -mgeneral-regs-only -std=c11 -pedantic"
         );
         
         %(
                 "src/libc",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/libc/% -ffreestanding -std=c11"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/libc/% -ffreestanding -std=c11 -pedantic"
         );
         
         %(
                 "src/mem",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding -std=c11"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/mem/% -ffreestanding -std=c11 -pedantic"
         );
 
         $(
