@@ -29,6 +29,8 @@ void panic(const char *msg)
         clear_screen();
         put_str("kernel panic! an unrecoverable error was encountered\n");
         put_str(msg);
+        __asm__("cli\n");
+        idle_until_int();
         while (true);
 }
 
@@ -51,4 +53,10 @@ void init_kernel(void)
 {
         init_ints();
         init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
+        log_info("initialized kernel");
+}
+
+void idle_until_int(void)
+{
+        __asm__("hlt\n");
 }

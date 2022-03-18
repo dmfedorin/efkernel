@@ -10,5 +10,6 @@ struct cpu_regs {
 struct cpu_regs get_cpu_regs(void);
 void panic(const char *msg);
 void init_kernel(void);
+void idle_until_int(void);
 
 #endif
