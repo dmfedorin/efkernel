@@ -48,9 +48,9 @@
         );
         
         %(
-                "src/sh",
+                "src/shell",
                 ".c",
-                "i686-elf-gcc -o imed/%.o -Iinclude -c src/sh/% -ffreestanding -std=c11 -pedantic"
+                "i686-elf-gcc -o imed/%.o -Iinclude -c src/shell/% -ffreestanding -std=c11 -pedantic"
         );
 
         $(

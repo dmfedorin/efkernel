@@ -3,104 +3,9 @@
 #include "io/text.h"
 #include "libc/string.h"
 #include <stdbool.h>
-#include "sh/sh.h"
 
 #define USED_SET_1_KEYS 89
-
-enum keycode {
-        KEYCODE_NULL,
-
-        KEYCODE_A,
-        KEYCODE_B,
-        KEYCODE_C,
-        KEYCODE_D,
-        KEYCODE_E,
-        KEYCODE_F,
-        KEYCODE_G,
-        KEYCODE_H,
-        KEYCODE_I,
-        KEYCODE_J,
-        KEYCODE_K,
-        KEYCODE_L,
-        KEYCODE_M,
-        KEYCODE_N,
-        KEYCODE_O,
-        KEYCODE_P,
-        KEYCODE_Q,
-        KEYCODE_R,
-        KEYCODE_S,
-        KEYCODE_T,
-        KEYCODE_U,
-        KEYCODE_V,
-        KEYCODE_W,
-        KEYCODE_X,
-        KEYCODE_Y,
-        KEYCODE_Z,
-
-        KEYCODE_0,
-        KEYCODE_1,
-        KEYCODE_2,
-        KEYCODE_3,
-        KEYCODE_4,
-        KEYCODE_5,
-        KEYCODE_6,
-        KEYCODE_7,
-        KEYCODE_8,
-        KEYCODE_9,
-
-        KEYCODE_ESC,
-        KEYCODE_BACKSPACE,
-        KEYCODE_TAB,
-        KEYCODE_ENTER,
-        KEYCODE_LEFT_CTRL,
-        KEYCODE_LEFT_SHIFT,
-        KEYCODE_RIGHT_SHIFT,
-        KEYCODE_LEFT_ALT,
-        KEYCODE_SPACE,
-        KEYCODE_CAPS_LOCK,
-        KEYCODE_NUM_LOCK,
-        KEYCODE_SCROLL_LOCK,
-
-        KEYCODE_HYPHEN,
-        KEYCODE_EQUALS,
-        KEYCODE_SEMICOLON,
-        KEYCODE_LEFT_BRACKET,
-        KEYCODE_RIGHT_BRACKET,
-        KEYCODE_QUOTE,
-        KEYCODE_BACKTICK,
-        KEYCODE_BACKSLASH,
-        KEYCODE_COMMA,
-        KEYCODE_PERIOD,
-        KEYCODE_SLASH,
-
-        KEYCODE_NUMPAD_0,
-        KEYCODE_NUMPAD_1,
-        KEYCODE_NUMPAD_2,
-        KEYCODE_NUMPAD_3,
-        KEYCODE_NUMPAD_4,
-        KEYCODE_NUMPAD_5,
-        KEYCODE_NUMPAD_6,
-        KEYCODE_NUMPAD_7,
-        KEYCODE_NUMPAD_8,
-        KEYCODE_NUMPAD_9,
-        KEYCODE_NUMPAD_ASTERISK,
-        KEYCODE_NUMPAD_HYPHEN,
-        KEYCODE_NUMPAD_PLUS,
-        KEYCODE_NUMPAD_PERIOD,
-
-        KEYCODE_F1,
-        KEYCODE_F2,
-        KEYCODE_F3,
-        KEYCODE_F4,
-        KEYCODE_F5,
-        KEYCODE_F6,
-        KEYCODE_F7,
-        KEYCODE_F8,
-        KEYCODE_F9,
-        KEYCODE_F10,
-        KEYCODE_F11,
-        KEYCODE_F12,
-};
+#define MAX_EVENT_CALLBACKS 64
 
 static enum keycode keymap[USED_SET_1_KEYS];
 
@@ -144,6 +49,7 @@ void init_ps2_keyboard(enum keyboard_layout layout)
                 memcpy(keymap, colemakkeymap, sizeof(keymap));
                 break;
         }
+        log_info("initialized ps2 keyboard");
 }
 
 static inline bool keycode_is_alpha(enum keycode keycode)
@@ -161,7 +67,7 @@ static inline bool keycode_is_numpad_num(enum keycode keycode)
         return keycode >= KEYCODE_NUMPAD_0 && keycode <= KEYCODE_NUMPAD_9;
 }
 
-static char keycode_to_char(enum keycode keycode)
+char keycode_to_char(enum keycode keycode)
 {
         if (keycode_is_alpha(keycode))
                 return keycode - KEYCODE_A + 'a';
@@ -169,21 +75,83 @@ static char keycode_to_char(enum keycode keycode)
                 return keycode - KEYCODE_0 + '0';
         else if (keycode_is_numpad_num(keycode))
                 return keycode - KEYCODE_NUMPAD_0 + '0';
-        /* other keycodes arent as easy to handle and require dedicated
-         * cases
+        /* other keycodes arent as easy to handle and require dedicated cases
          */
         switch (keycode) {
-        case KEYCODE_BACKSPACE: return '\b';
-        case KEYCODE_TAB: return '\t';
-        case KEYCODE_ENTER: return '\n';
-        case KEYCODE_SPACE: return ' ';
-        default: return '\0';
+        case KEYCODE_BACKSPACE:
+                return '\b';
+        case KEYCODE_TAB:
+                return '\t';
+        case KEYCODE_ENTER:
+                return '\n';
+        case KEYCODE_SPACE:
+                return ' ';
+        case KEYCODE_HYPHEN:
+        case KEYCODE_NUMPAD_HYPHEN:
+                return '-';
+        case KEYCODE_EQUALS:
+                return '=';
+        case KEYCODE_SEMICOLON:
+                return ';';
+        case KEYCODE_LEFT_BRACKET:
+                return '[';
+        case KEYCODE_RIGHT_BRACKET:
+                return ']';
+        case KEYCODE_QUOTE:
+                return '\'';
+        case KEYCODE_BACKTICK:
+                return '`';
+        case KEYCODE_BACKSLASH:
+                return '\\';
+        case KEYCODE_COMMA:
+                return ',';
+        case KEYCODE_PERIOD:
+        case KEYCODE_NUMPAD_PERIOD:
+                return '.';
+        case KEYCODE_NUMPAD_ASTERISK:
+                return '*';
+        case KEYCODE_NUMPAD_PLUS:
+                return '+';
+        default:
+                return '\0';
         }
+}
+
+static void (*presscallbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
+static int nextpresscallback = 0;
+
+static void (*releasecallbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
+static int nextreleasecallback = 0;
+
+static inline bool is_press(uint8_t scancode)
+{
+        return scancode < USED_SET_1_KEYS;
+}
+
+static inline bool is_release(uint8_t scancode)
+{
+        return scancode >= 0x81 && scancode <= 0x81 + USED_SET_1_KEYS;
 }
 
 void ps2_key_event(uint8_t scancode)
 {
-        if (scancode > USED_SET_1_KEYS - 1)
-                return;
-        put_char(keycode_to_char(keymap[scancode]));
+        if (is_press(scancode)) {
+                for (int i = 0; i < nextpresscallback; ++i)
+                        presscallbacks[i](keymap[scancode]);
+        } else if (is_release(scancode)) {
+                for (int i = 0; i < nextreleasecallback; ++i)
+                        releasecallbacks[i](keymap[scancode - 0x80]);
+        }
+}
+
+void add_ps2_press_callback(void (*callback)(enum keycode keycode))
+{
+        presscallbacks[nextpresscallback] = callback;
+        ++nextpresscallback;
+}
+
+void add_ps2_release_callback(void (*callback)(enum keycode keycode))
+{
+        releasecallbacks[nextreleasecallback] = callback;
+        ++nextreleasecallback;
 }
