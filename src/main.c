@@ -1,4 +1,4 @@
-/* must be the first line of code for proper function*/
+/* must be the first line of code for proper function */
 __asm__("jmp main\n");
 
 #include "kernel.h"
