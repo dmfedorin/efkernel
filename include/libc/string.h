@@ -9,5 +9,6 @@ void strcpy(char *restrict dst, const char *restrict src);
 void strncpy(char *restrict dst, const char *restrict src, int size);
 void strcat(char *dst, const char *restrict src);
 void strncat(char *dst, const char *restrict src, int size);
+int strlen(const char *s);
 
 #endif

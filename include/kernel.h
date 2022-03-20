@@ -11,5 +11,6 @@ struct cpu_regs get_cpu_regs(void);
 void panic(const char *msg);
 void init_kernel(void);
 void idle_until_int(void);
+const char *kernel_version(void); /* convention: v<major>.<minor>.<patch> */
 
 #endif

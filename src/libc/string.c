@@ -47,3 +47,11 @@ void strncat(char *dst, const char *restrict src, int size)
                 ++dstend;
         strncpy(dstend, src, size);
 }
+
+int strlen(const char *s)
+{
+        int len = 0;
+        while (s[len] != '\0')
+                ++len;
+        return len;
+}

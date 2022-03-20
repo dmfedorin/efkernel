@@ -3,9 +3,8 @@
 #define VID_MEM_PTR ((char *)0xb8000)
 #define TERM_WIDTH 80
 #define TERM_HEIGHT 25
-#define TAB_SIZE 8
 
-static int textcursorpos = 0;
+static int cursorpos = 0;
 
 /* light gray on black by default */
 static uint8_t attr = 0x7;
@@ -14,20 +13,20 @@ void put_char(char c)
 {
         switch (c) {
         case '\b':
-                --textcursorpos;
-                *(VID_MEM_PTR + textcursorpos * 2) = '\0';
-                *(VID_MEM_PTR + textcursorpos * 2 + 1) = attr;
+                --cursorpos;
+                *(VID_MEM_PTR + cursorpos * 2) = '\0';
+                *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
                 break;
         case '\t':
-                textcursorpos += TAB_SIZE;
+                cursorpos += TAB_SIZE;
                 break;
         case '\n':
-                textcursorpos += TERM_WIDTH - textcursorpos % TERM_WIDTH;
+                cursorpos += TERM_WIDTH - cursorpos % TERM_WIDTH;
                 break;
         default:
-                *(VID_MEM_PTR + textcursorpos * 2) = c;
-                *(VID_MEM_PTR + textcursorpos * 2 + 1) = attr;
-                ++textcursorpos;
+                *(VID_MEM_PTR + cursorpos * 2) = c;
+                *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                ++cursorpos;
                 break;
         }
 }
@@ -70,10 +69,10 @@ void put_hex_64(uint64_t h)
 
 void clear_screen(void)
 {
-        textcursorpos = 0;
+        cursorpos = 0;
         for (int i = 0; i < TERM_WIDTH * TERM_HEIGHT; ++i)
                 put_char('\0');
-        textcursorpos = 0;
+        cursorpos = 0;
 }
 
 void log_info(const char *msg)

@@ -2,9 +2,10 @@
 __asm__("jmp main\n");
 
 #include "kernel.h"
-#include "io/text.h"
+#include "shell/shell.h"
 
 void main(void)
 {
         init_kernel();
+        init_shell();
 }

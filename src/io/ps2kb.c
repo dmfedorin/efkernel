@@ -144,13 +144,13 @@ void ps2_key_event(uint8_t scancode)
         }
 }
 
-void add_ps2_press_callback(void (*callback)(enum keycode keycode))
+void add_ps2_key_press_callback(void (*callback)(enum keycode keycode))
 {
         presscallbacks[nextpresscallback] = callback;
         ++nextpresscallback;
 }
 
-void add_ps2_release_callback(void (*callback)(enum keycode keycode))
+void add_ps2_key_release_callback(void (*callback)(enum keycode keycode))
 {
         releasecallbacks[nextreleasecallback] = callback;
         ++nextreleasecallback;

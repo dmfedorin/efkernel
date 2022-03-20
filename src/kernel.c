@@ -49,14 +49,26 @@ static void init_ints(void)
         log_info("initialized interrupts");
 }
 
+static void init_io(void)
+{
+        init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
+        log_info("initialized io");
+}
+
 void init_kernel(void)
 {
         init_ints();
-        init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
+        init_io();
         log_info("initialized kernel");
 }
 
 void idle_until_int(void)
 {
         __asm__("hlt\n");
+}
+
+/* convention: v<major>.<minor>.<patch> */
+const char *kernel_version(void)
+{
+        return "v1.0.0";
 }

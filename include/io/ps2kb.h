@@ -107,7 +107,7 @@ enum keycode {
 };
 
 char keycode_to_char(enum keycode keycode);
-void add_ps2_press_callback(void (*callback)(enum keycode keycode));
-void add_ps2_release_callback(void (*callback)(enum keycode keycode));
+void add_ps2_key_press_callback(void (*callback)(enum keycode keycode));
+void add_ps2_key_release_callback(void (*callback)(enum keycode keycode));
 
 #endif

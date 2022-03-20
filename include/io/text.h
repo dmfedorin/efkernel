@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define TAB_SIZE 8
+
 void put_char(char c);
 void put_str(const char *s);
 void put_hex(uint32_t h);
