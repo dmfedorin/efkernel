@@ -1,3 +1,3 @@
 #include "filesys/fatfs.h"
 
-/* create later */
+__asm__("jmp .\n");

@@ -25,11 +25,42 @@ struct cpu_regs get_cpu_regs(void)
         return regs;
 }
 
+static void print_cpu_regs(void)
+{
+        struct cpu_regs regs = get_cpu_regs();
+        put_str("eax: ");
+        put_hex(regs.eax);
+        put_char('\n');
+        put_str("ebx: ");
+        put_hex(regs.ebx);
+        put_char('\n');
+        put_str("ecx: ");
+        put_hex(regs.ecx);
+        put_char('\n');
+        put_str("edx: ");
+        put_hex(regs.edx);
+        put_char('\n');
+        put_str("esp: ");
+        put_hex(regs.esp);
+        put_char('\n');
+        put_str("ebp: ");
+        put_hex(regs.ebp);
+        put_char('\n');
+        put_str("esi: ");
+        put_hex(regs.esi);
+        put_char('\n');
+        put_str("edi: ");
+        put_hex(regs.edi);
+        put_char('\n');
+}
+
 void panic(const char *msg)
 {
         clear_screen();
         put_str("kernel panic! an unrecoverable error was encountered\n");
         put_str(msg);
+        put_str("\n\n");
+        print_cpu_regs();
         __asm__("cli\n");
         idle_until_int();
         while (true);
