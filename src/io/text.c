@@ -5,6 +5,7 @@
 #define TERM_HEIGHT 25
 
 static int cursorpos = 0;
+static int backstoppos = 0;
 
 /* light gray on black by default */
 static uint8_t attr = 0x7;
@@ -13,9 +14,11 @@ void put_char(char c)
 {
         switch (c) {
         case '\b':
-                --cursorpos;
-                *(VID_MEM_PTR + cursorpos * 2) = '\0';
-                *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                if (cursorpos > backstoppos) {
+                        --cursorpos;
+                        *(VID_MEM_PTR + cursorpos * 2) = '\0';
+                        *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                }
                 break;
         case '\t':
                 cursorpos += TAB_SIZE;
@@ -73,6 +76,7 @@ void clear_screen(void)
         for (int i = 0; i < TERM_WIDTH * TERM_HEIGHT; ++i)
                 put_char('\0');
         cursorpos = 0;
+        set_text_back_stop_pos(0);
 }
 
 void log_info(const char *msg)
@@ -80,4 +84,14 @@ void log_info(const char *msg)
         put_str("log: ");
         put_str(msg);
         put_str("\n");
+}
+
+void set_text_back_stop_pos(int bsp)
+{
+        backstoppos = bsp;
+}
+
+int text_cursor_pos(void)
+{
+        return cursorpos;
 }

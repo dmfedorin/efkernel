@@ -11,5 +11,7 @@ void put_hex(uint32_t h);
 void put_hex_64(uint64_t h);
 void clear_screen(void);
 void log_info(const char *msg);
+void set_text_back_stop_pos(int bsp);
+int text_cursor_pos(void);
 
 #endif

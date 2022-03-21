@@ -8,4 +8,5 @@ void main(void)
 {
         init_kernel();
         init_shell();
+        run_shell();
 }

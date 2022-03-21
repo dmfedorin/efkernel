@@ -6,6 +6,7 @@
 #include "int/idt.h"
 #include "int/pic.h"
 #include "io/ps2kb.h"
+#include "defs.h"
 
 struct cpu_regs get_cpu_regs(void)
 {
@@ -67,8 +68,7 @@ void idle_until_int(void)
         __asm__("hlt\n");
 }
 
-/* convention: v<major>.<minor>.<patch> */
 const char *kernel_version(void)
 {
-        return "v1.0.0";
+        return VERSION(1, 0, 0);
 }

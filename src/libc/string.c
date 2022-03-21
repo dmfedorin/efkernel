@@ -32,20 +32,18 @@ void strncpy(char *restrict dst, const char *restrict src, int size)
         dst[i + 1] = '\0'; /* add null terminator */
 }
 
-void strcat(char *dst, const char *restrict src)
+void strcat(char *restrict dst, const char *restrict src)
 {
-        char *restrict dstend = dst;
-        while (*dstend != '\0')
-                ++dstend;
-        strcpy(dstend, src);
+        while (*dst != '\0')
+                ++dst;
+        strcpy(dst, src);
 }
 
-void strncat(char *dst, const char *restrict src, int size)
+void strncat(char *restrict dst, const char *restrict src, int size)
 {
-        char *restrict dstend = dst;
-        while (*dstend != '\0')
-                ++dstend;
-        strncpy(dstend, src, size);
+        while (*dst != '\0')
+                ++dst;
+        strncpy(dst, src, size);
 }
 
 int strlen(const char *s)
@@ -54,4 +52,19 @@ int strlen(const char *s)
         while (s[len] != '\0')
                 ++len;
         return len;
+}
+
+int strcmp(const char *restrict s1, const char *restrict s2)
+{
+        while (*s1 != '\0' || *s2 != '\0')  {
+                if (*s1 > *s2)
+                        return 1;
+                else if (*s1 < *s2)
+                        return -1;
+                else {
+                        ++s1;
+                        ++s2;
+                }
+        }
+        return 0;
 }

@@ -2,10 +2,28 @@
 
 #include "kernel.h"
 #include "io/text.h"
+#include "shell/shell.h"
 
-void efk_version_cmd(void)
+void efkernel_version_shell_cmd(void)
 {
         put_str("efkernel version ");
         put_str(kernel_version());
         put_char('\n');
+}
+
+void efshell_version_shell_cmd(void)
+{
+        put_str("efshell version ");
+        put_str(shell_version());
+        put_char('\n');
+}
+
+void help_me_shell_cmd(void)
+{
+        put_str("default efshell commands:\n"
+                "\thelp-me: display this menu\n"
+                "\tefkernel-version: display the efkernel version\n"
+                "\tefshell-version: display the efshell version\n"
+                "\tclear-screen: clear the screen of all text\n"
+                "\texit-shell: stop execution of efshell\n");
 }
