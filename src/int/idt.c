@@ -2,7 +2,6 @@
 
 #include "int/isr.h"
 #include "defs.h"
-#include <stdalign.h>
 #include "io/text.h"
 
 #define IDT_SIZE 256
