@@ -25,45 +25,53 @@ struct cpu_regs get_cpu_regs(void)
         return regs;
 }
 
-static void print_cpu_regs(void)
+static void print_cpu_regs(const struct cpu_regs *regs)
 {
-        struct cpu_regs regs = get_cpu_regs();
         put_str("eax: ");
-        put_hex(regs.eax);
+        put_hex(regs->eax);
         put_char('\n');
         put_str("ebx: ");
-        put_hex(regs.ebx);
+        put_hex(regs->ebx);
         put_char('\n');
         put_str("ecx: ");
-        put_hex(regs.ecx);
+        put_hex(regs->ecx);
         put_char('\n');
         put_str("edx: ");
-        put_hex(regs.edx);
+        put_hex(regs->edx);
         put_char('\n');
         put_str("esp: ");
-        put_hex(regs.esp);
+        put_hex(regs->esp);
         put_char('\n');
         put_str("ebp: ");
-        put_hex(regs.ebp);
+        put_hex(regs->ebp);
         put_char('\n');
         put_str("esi: ");
-        put_hex(regs.esi);
+        put_hex(regs->esi);
         put_char('\n');
         put_str("edi: ");
-        put_hex(regs.edi);
+        put_hex(regs->edi);
         put_char('\n');
 }
 
 void panic(const char *msg)
 {
+        struct cpu_regs regs = get_cpu_regs(); /* must be first to preserve
+                                                * state of registers at call,
+                                                * note that eax and ebx will
+                                                * still probably be
+                                                * overwritten
+                                                */
+        set_text_attr(TEXT_COLOR_WHITE, TEXT_COLOR_RED);
         clear_screen();
-        put_str("kernel panic! an unrecoverable error was encountered\n");
+        put_str("kernel panic! an unrecoverable error was encountered\n"
+                "error: ");
         put_str(msg);
         put_str("\n\n");
-        print_cpu_regs();
+        print_cpu_regs(&regs);
         __asm__("cli\n");
         idle_until_int();
-        while (true);
+        while (true)
+                continue;
 }
 
 static void init_ints(void)
@@ -81,7 +89,7 @@ static void init_ints(void)
         log_info("initialized interrupts");
 }
 
-static void init_io(void)
+static inline void init_io(void)
 {
         init_ps2_keyboard(KEYBOARD_LAYOUT_COLEMAK);
         log_info("initialized io");

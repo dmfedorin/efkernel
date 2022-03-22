@@ -7,8 +7,11 @@
 #include "libc/ctype.h"
 #include "shell/defcmd.h"
 #include "defs.h"
+#include "kernel.h"
 
 #define SHELL_BUF_SIZE 256
+#define LEX_BUF_SIZE 256
+#define MAX_ARGS 64
 
 static char shellbuf[SHELL_BUF_SIZE] = { 0 };
 static int cursorpos = 0;
@@ -94,7 +97,7 @@ void run_shell(void)
 {
         bool running = true;
         while (running) {
-                put_str("[efshell]> ");
+                put_str("(efshell)> ");
                 set_text_back_stop_pos(text_cursor_pos());
                 read_key_input();
                 if (strcmp(shellbuf, "help-me") == 0)
@@ -107,6 +110,8 @@ void run_shell(void)
                         clear_screen();
                 else if (strcmp(shellbuf, "exit-shell") == 0)
                         running = false;
+                else if (strcmp(shellbuf, "cause-panic") == 0)
+                        panic("caused panic intentionally");
         }
         log_info("ran shell");
 }

@@ -18,11 +18,11 @@ void remap_pic(void)
         wait_port_io();
         uint8_t intmask2 = read_port_byte(PORT_PIC2_DATA);
         wait_port_io();
-        write_port_byte(PORT_PIC1_CTRL,
-                        INIT_CTRL_WORD_1_INIT | INIT_CTRL_WORD_1_ICW4);
+        write_port_byte(PORT_PIC1_CTRL, (uint8_t)(INIT_CTRL_WORD_1_INIT
+                                                  | INIT_CTRL_WORD_1_ICW4));
         wait_port_io();
-        write_port_byte(PORT_PIC2_CTRL,
-                        INIT_CTRL_WORD_1_INIT | INIT_CTRL_WORD_1_ICW4);
+        write_port_byte(PORT_PIC2_CTRL, (uint8_t)(INIT_CTRL_WORD_1_INIT
+                                                  | INIT_CTRL_WORD_1_ICW4));
         wait_port_io();
         /* best not collide with an existing interrupt like an exception,
          * remap pic to avoid since the last exception interrupt is 0x1f
@@ -35,14 +35,11 @@ void remap_pic(void)
         wait_port_io();
         write_port_byte(PORT_PIC2_DATA, 2);
         wait_port_io();
-        write_port_byte(PORT_PIC1_DATA, INIT_CTRL_WORD_4_8086);
+        write_port_byte(PORT_PIC1_DATA, (uint8_t)INIT_CTRL_WORD_4_8086);
         wait_port_io();
-        write_port_byte(PORT_PIC2_DATA, INIT_CTRL_WORD_4_8086);
+        write_port_byte(PORT_PIC2_DATA, (uint8_t)INIT_CTRL_WORD_4_8086);
         wait_port_io();
-        write_port_byte(PORT_PIC1_DATA, intmask1);
-        wait_port_io();
-        write_port_byte(PORT_PIC2_DATA, intmask2);
-        wait_port_io();
+        mask_pic_ints(intmask1, intmask2);
         log_info("remapped pic");
 }
 
