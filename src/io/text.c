@@ -17,7 +17,7 @@ void put_char(char c)
                 if (cursorpos > backstoppos) {
                         --cursorpos;
                         *(VID_MEM_PTR + cursorpos * 2) = '\0';
-                        *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                        *((uint8_t *)VID_MEM_PTR + cursorpos * 2 + 1) = attr;
                 }
                 break;
         case '\t':
@@ -28,7 +28,7 @@ void put_char(char c)
                 break;
         default:
                 *(VID_MEM_PTR + cursorpos * 2) = c;
-                *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                *((uint8_t *)VID_MEM_PTR + cursorpos * 2 + 1) = attr;
                 ++cursorpos;
                 break;
         }
@@ -83,7 +83,7 @@ void log_info(const char *msg)
 {
         put_str("log: ");
         put_str(msg);
-        put_str("\n");
+        put_char('\n');
 }
 
 void set_text_back_stop_pos(int bsp)
@@ -94,4 +94,19 @@ void set_text_back_stop_pos(int bsp)
 int text_cursor_pos(void)
 {
         return cursorpos;
+}
+
+void set_text_attr(enum text_color fg, enum text_color bg)
+{
+        attr = (uint8_t)bg << 4 | (uint8_t)fg;
+}
+
+enum text_color text_bg_color(void)
+{
+        return (enum text_color)(attr & 0xf0);
+}
+
+enum text_color text_fg_color(void)
+{
+        return (enum text_color)(attr & 0xf);
 }

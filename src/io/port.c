@@ -44,7 +44,7 @@ uint32_t read_port_long(enum port p)
         uint32_t res;
         __asm__("inl %1, %0\n"
                 : "=a" (res)
-                : "Nd" (p));
+                : "Nd" ((uint16_t)p));
         return res;
 }
 

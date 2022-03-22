@@ -25,5 +25,6 @@ void help_me_shell_cmd(void)
                 "\tefkernel-version: display the efkernel version\n"
                 "\tefshell-version: display the efshell version\n"
                 "\tclear-screen: clear the screen of all text\n"
-                "\texit-shell: stop execution of efshell\n");
+                "\texit-shell: stop execution of efshell\n"
+                "\tcause-panic: cause a kernel panic intentionally\n");
 }

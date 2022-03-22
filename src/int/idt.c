@@ -51,5 +51,5 @@ void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gatetype,
 {
         idt[ent].offsethigh = OFFSET_HIGH(isr);
         idt[ent].offsetlow = OFFSET_LOW(isr);
-        idt[ent].typeattr = gatetype;
+        idt[ent].typeattr = (uint8_t)gatetype;
 }
