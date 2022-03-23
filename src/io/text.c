@@ -17,7 +17,7 @@ void put_char(char c)
                 if (cursorpos > backstoppos) {
                         --cursorpos;
                         *(VID_MEM_PTR + cursorpos * 2) = '\0';
-                        *((uint8_t *)VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                        *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
                 }
                 break;
         case '\t':
@@ -28,7 +28,7 @@ void put_char(char c)
                 break;
         default:
                 *(VID_MEM_PTR + cursorpos * 2) = c;
-                *((uint8_t *)VID_MEM_PTR + cursorpos * 2 + 1) = attr;
+                *(VID_MEM_PTR + cursorpos * 2 + 1) = attr;
                 ++cursorpos;
                 break;
         }
@@ -98,15 +98,15 @@ int text_cursor_pos(void)
 
 void set_text_attr(enum text_color fg, enum text_color bg)
 {
-        attr = (uint8_t)bg << 4 | (uint8_t)fg;
+        attr = bg << 4 | fg;
 }
 
 enum text_color text_bg_color(void)
 {
-        return (enum text_color)(attr & 0xf0);
+        return attr & 0xf0;
 }
 
 enum text_color text_fg_color(void)
 {
-        return (enum text_color)(attr & 0xf);
+        return attr & 0xf;
 }

@@ -112,6 +112,8 @@ void run_shell(void)
                         running = false;
                 else if (strcmp(shellbuf, "cause-panic") == 0)
                         panic("caused panic intentionally");
+                else if (strcmp(shellbuf, "mem-stats") == 0)
+                        mem_stats_shell_cmd();
         }
         log_info("ran shell");
 }

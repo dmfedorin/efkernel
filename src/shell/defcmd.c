@@ -3,6 +3,7 @@
 #include "kernel.h"
 #include "io/text.h"
 #include "shell/shell.h"
+#include "mem/layout.h"
 
 void efkernel_version_shell_cmd(void)
 {
@@ -26,5 +27,11 @@ void help_me_shell_cmd(void)
                 "\tefshell-version: display the efshell version\n"
                 "\tclear-screen: clear the screen of all text\n"
                 "\texit-shell: stop execution of efshell\n"
-                "\tcause-panic: cause a kernel panic intentionally\n");
+                "\tcause-panic: cause a kernel panic intentionally\n"
+                "\tmem-stats: displays statistics about memory\n");
+}
+
+void mem_stats_shell_cmd(void)
+{
+        print_mem_layout();
 }

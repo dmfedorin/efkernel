@@ -7,6 +7,7 @@
 #include "int/pic.h"
 #include "io/ps2kb.h"
 #include "defs.h"
+#include "mem/layout.h"
 
 struct cpu_regs get_cpu_regs(void)
 {
@@ -95,10 +96,17 @@ static inline void init_io(void)
         log_info("initialized io");
 }
 
+static inline void init_mem(void)
+{
+        init_mem_layout();
+        log_info("initialized memory");
+}
+
 void init_kernel(void)
 {
         init_ints();
         init_io();
+        init_mem();
         log_info("initialized kernel");
 }
 

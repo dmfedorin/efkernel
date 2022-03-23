@@ -4,5 +4,6 @@
 void efkernel_version_shell_cmd(void);
 void efshell_version_shell_cmd(void);
 void help_me_shell_cmd(void);
+void mem_stats_shell_cmd(void);
 
 #endif

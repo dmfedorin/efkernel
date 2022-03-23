@@ -70,11 +70,11 @@ static inline bool keycode_is_numpad_num(enum keycode keycode)
 char keycode_to_char(enum keycode keycode)
 {
         if (keycode_is_alpha(keycode))
-                return (char)(keycode - KEYCODE_A + 'a');
+                return 'a' + keycode - KEYCODE_A;
         else if (keycode_is_num(keycode))
-                return (char)(keycode - KEYCODE_0 + '0');
+                return '0' + keycode - KEYCODE_0;
         else if (keycode_is_numpad_num(keycode))
-                return (char)(keycode - KEYCODE_NUMPAD_0 + '0');
+                return '0' + keycode - KEYCODE_NUMPAD_0;
         /* other keycodes arent as easy to handle and require dedicated cases
          */
         switch (keycode) {
