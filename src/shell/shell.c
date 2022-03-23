@@ -13,21 +13,21 @@
 #define LEX_BUF_SIZE 256
 #define MAX_ARGS 64
 
-static char shellbuf[SHELL_BUF_SIZE] = { 0 };
-static int cursorpos = 0;
+static char shell_buf[SHELL_BUF_SIZE] = { 0 };
+static int cursor_pos = 0;
 
 static void put_shell_buf_char(char c)
 {
         switch (c) {
         case '\b':
-                if (cursorpos > 0) {
-                        shellbuf[cursorpos] = '\0';
-                        --cursorpos;
+                if (cursor_pos > 0) {
+                        shell_buf[cursor_pos] = '\0';
+                        --cursor_pos;
                 }
                 break;
         default:
-                shellbuf[cursorpos] = c;
-                ++cursorpos;
+                shell_buf[cursor_pos] = c;
+                ++cursor_pos;
                 break;
         }
 }
@@ -85,8 +85,8 @@ void init_shell(void)
 /* input will be read into shellbuf */
 static void read_key_input(void)
 {
-        memset(shellbuf, '\0', SHELL_BUF_SIZE);
-        cursorpos = 0;
+        memset(shell_buf, '\0', SHELL_BUF_SIZE);
+        cursor_pos = 0;
         caps = false; /* caps might not be reset by default */
         listening = true;
         while (listening)
@@ -100,19 +100,19 @@ void run_shell(void)
                 put_str("(efshell)> ");
                 set_text_back_stop_pos(text_cursor_pos());
                 read_key_input();
-                if (strcmp(shellbuf, "help-me") == 0)
+                if (strcmp(shell_buf, "help-me") == 0)
                         help_me_shell_cmd();
-                else if (strcmp(shellbuf, "efkernel-version") == 0)
+                else if (strcmp(shell_buf, "efkernel-version") == 0)
                         efkernel_version_shell_cmd();
-                else if (strcmp(shellbuf, "efshell-version") == 0)
+                else if (strcmp(shell_buf, "efshell-version") == 0)
                         efshell_version_shell_cmd();
-                else if (strcmp(shellbuf, "clear-screen") == 0)
+                else if (strcmp(shell_buf, "clear-screen") == 0)
                         clear_screen();
-                else if (strcmp(shellbuf, "exit-shell") == 0)
+                else if (strcmp(shell_buf, "exit-shell") == 0)
                         running = false;
-                else if (strcmp(shellbuf, "cause-panic") == 0)
+                else if (strcmp(shell_buf, "cause-panic") == 0)
                         panic("caused panic intentionally");
-                else if (strcmp(shellbuf, "mem-stats") == 0)
+                else if (strcmp(shell_buf, "mem-stats") == 0)
                         mem_stats_shell_cmd();
         }
         log_info("ran shell");

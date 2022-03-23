@@ -1,19 +1,13 @@
 #include "mem/layout.h"
 
-#include <stdint.h>
 #include "io/text.h"
 
 /* efboot loads detected memory layout to 0x500 */
-#define MEM_LAYOUT_PTR ((struct layout_entry *)0x500)
+#define MEM_LAYOUT_PTR ((struct mem_layout_entry *)0x500)
 
 #define MAX_FREE_LAYOUT_ENTRIES 64
 #define MAX_ADDRESSABLE_LAYOUT_ENTRY_BASE 0xffffffff
 #define MAX_KERNEL_RESERVED_ADDR 0xfffff
-
-struct layout_entry {
-        uint64_t base, size;
-        uint32_t type, acpiextattr;
-};
 
 enum layout_entry_type {
         LAYOUT_ENTRY_TYPE_NULL = 0,
@@ -31,42 +25,44 @@ enum layout_entry_type {
 };
 
 /* this invalidates layout entries which cannot be addressed */
-static inline bool is_valid_layout_entry(const struct layout_entry *layent)
+static
+inline bool is_valid_layout_entry(const struct mem_layout_entry *lay_ent)
 {
-        return layent->base <= MAX_ADDRESSABLE_LAYOUT_ENTRY_BASE
-               && layent->type != LAYOUT_ENTRY_TYPE_NULL;
+        return lay_ent->base <= MAX_ADDRESSABLE_LAYOUT_ENTRY_BASE
+               && lay_ent->type != LAYOUT_ENTRY_TYPE_NULL;
 }
 
 void print_mem_layout(void)
 {
         put_str("base       size       type       type decoded\n");
-        const char *typedecodemap[] = {
+        const char *type_decode_map[] = {
                 "null", "free", "reserved", "reclaimable", "non-volatile",
                 "bad", "kernel-reserved",
         };
-        const struct layout_entry *layent = MEM_LAYOUT_PTR;
-        while (is_valid_layout_entry(layent)) {
-                put_hex(layent->base);
+        const struct mem_layout_entry *lay_ent = MEM_LAYOUT_PTR;
+        while (is_valid_layout_entry(lay_ent)) {
+                put_hex(lay_ent->base);
                 put_char(' ');
-                put_hex(layent->size);
+                put_hex(lay_ent->size);
                 put_char(' ');
-                put_hex(layent->type);
+                put_hex(lay_ent->type);
                 put_char(' ');
-                put_str(typedecodemap[layent->type]);
+                put_str(type_decode_map[lay_ent->type]);
                 put_char('\n');
-                ++layent;
+                ++lay_ent;
         }
 }
 
-static struct layout_entry freelayents[MAX_FREE_LAYOUT_ENTRIES] = { 0 };
-static int nextfreelayent = 0;
+static struct mem_layout_entry free_lay_ents[MAX_FREE_LAYOUT_ENTRIES] = { 0 };
+static int next_free_lay_ent = 0;
 
 bool is_free_in_mem_layout(const void *addr, int size)
 {
-        for (int i = 0; i < nextfreelayent; ++i) {
-                uint32_t entend = freelayents[i].base + freelayents[i].size;
-                bool free = (uint32_t)addr >= freelayents[i].base
-                            && (uint32_t)addr + size <= entend;
+        for (int i = 0; i < next_free_lay_ent; ++i) {
+                uint32_t ent_end = free_lay_ents[i].base
+                                   + free_lay_ents[i].size;
+                bool free = (uint32_t)addr >= free_lay_ents[i].base
+                            && (uint32_t)addr + size <= ent_end;
                 if (free)
                         return true;
         }
@@ -75,23 +71,23 @@ bool is_free_in_mem_layout(const void *addr, int size)
 
 static void mark_kernel_reserved_layout_entries(void)
 {
-        struct layout_entry *layent = MEM_LAYOUT_PTR;
-        while (is_valid_layout_entry(layent)) {
-                if (layent->base + layent->size <= MAX_KERNEL_RESERVED_ADDR)
-                        layent->type = LAYOUT_ENTRY_TYPE_KERNEL_RESERVED;
-                ++layent;
+        struct mem_layout_entry *lay_ent = MEM_LAYOUT_PTR;
+        while (is_valid_layout_entry(lay_ent)) {
+                if (lay_ent->base + lay_ent->size <= MAX_KERNEL_RESERVED_ADDR)
+                        lay_ent->type = LAYOUT_ENTRY_TYPE_KERNEL_RESERVED;
+                ++lay_ent;
         }
 }
 
 static void save_free_layout_entries(void)
 {
-        const struct layout_entry *layent = MEM_LAYOUT_PTR;
-        while (is_valid_layout_entry(layent)) {
-                if (layent->type == LAYOUT_ENTRY_TYPE_FREE) {
-                        freelayents[nextfreelayent] = *layent;
-                        ++nextfreelayent;
+        const struct mem_layout_entry *lay_ent = MEM_LAYOUT_PTR;
+        while (is_valid_layout_entry(lay_ent)) {
+                if (lay_ent->type == LAYOUT_ENTRY_TYPE_FREE) {
+                        free_lay_ents[next_free_lay_ent] = *lay_ent;
+                        ++next_free_lay_ent;
                 }
-                ++layent;
+                ++lay_ent;
         }
 }
 
@@ -100,4 +96,9 @@ void init_mem_layout(void)
         mark_kernel_reserved_layout_entries();
         save_free_layout_entries();
         log_info("initialized memory layout");
+}
+
+const struct mem_layout_entry *free_mem_layout_entries(void)
+{
+        return free_lay_ents;
 }

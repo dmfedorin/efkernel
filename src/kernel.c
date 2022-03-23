@@ -8,6 +8,7 @@
 #include "io/ps2kb.h"
 #include "defs.h"
 #include "mem/layout.h"
+#include "mem/heap.h"
 
 struct cpu_regs get_cpu_regs(void)
 {
@@ -99,6 +100,7 @@ static inline void init_io(void)
 static inline void init_mem(void)
 {
         init_mem_layout();
+        init_heap();
         log_info("initialized memory");
 }
 

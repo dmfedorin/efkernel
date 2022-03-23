@@ -14,9 +14,9 @@ enum init_ctrl_word {
 
 void remap_pic(void)
 {
-        uint8_t intmask1 = read_port_byte(PORT_PIC1_DATA);
+        uint8_t int_mask_1 = read_port_byte(PORT_PIC1_DATA);
         wait_port_io();
-        uint8_t intmask2 = read_port_byte(PORT_PIC2_DATA);
+        uint8_t int_mask_2 = read_port_byte(PORT_PIC2_DATA);
         wait_port_io();
         write_port_byte(PORT_PIC1_CTRL,
                         INIT_CTRL_WORD_1_INIT | INIT_CTRL_WORD_1_ICW4);
@@ -39,15 +39,15 @@ void remap_pic(void)
         wait_port_io();
         write_port_byte(PORT_PIC2_DATA, INIT_CTRL_WORD_4_8086);
         wait_port_io();
-        mask_pic_ints(intmask1, intmask2);
+        mask_pic_ints(int_mask_1, int_mask_2);
         log_info("remapped pic");
 }
 
-void mask_pic_ints(uint8_t intmask1, uint8_t intmask2)
+void mask_pic_ints(uint8_t int_mask_1, uint8_t int_mask_2)
 {
-        write_port_byte(PORT_PIC1_DATA, intmask1);
+        write_port_byte(PORT_PIC1_DATA, int_mask_1);
         wait_port_io();
-        write_port_byte(PORT_PIC2_DATA, intmask2);
+        write_port_byte(PORT_PIC2_DATA, int_mask_2);
         wait_port_io();
 }
 

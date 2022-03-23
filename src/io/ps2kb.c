@@ -7,7 +7,7 @@
 #define USED_SET_1_KEYS 89
 #define MAX_EVENT_CALLBACKS 64
 
-static enum keycode keymap[USED_SET_1_KEYS];
+static enum keycode key_map[USED_SET_1_KEYS];
 
 void init_ps2_keyboard(enum keyboard_layout layout)
 {
@@ -17,7 +17,7 @@ void init_ps2_keyboard(enum keyboard_layout layout)
                 break;
         case KEYBOARD_LAYOUT_COLEMAK:
         default:;
-                enum keycode colemakkeymap[USED_SET_1_KEYS] = {
+                enum keycode colemak_key_map[USED_SET_1_KEYS] = {
                         KEYCODE_NULL, KEYCODE_ESC, KEYCODE_1, KEYCODE_2,
                         KEYCODE_3, KEYCODE_4, KEYCODE_5, KEYCODE_6, KEYCODE_7,
                         KEYCODE_8, KEYCODE_9, KEYCODE_0, KEYCODE_HYPHEN,
@@ -46,7 +46,7 @@ void init_ps2_keyboard(enum keyboard_layout layout)
                         KEYCODE_NUMPAD_PERIOD, KEYCODE_NULL, KEYCODE_NULL,
                         KEYCODE_NULL, KEYCODE_F11, KEYCODE_F12,
                 };
-                memcpy(keymap, colemakkeymap, sizeof(keymap));
+                memcpy(key_map, colemak_key_map, sizeof(key_map));
                 break;
         }
         log_info("initialized ps2 keyboard");
@@ -117,11 +117,11 @@ char keycode_to_char(enum keycode keycode)
         }
 }
 
-static void (*presscallbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
-static int nextpresscallback = 0;
+static void (*press_callbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
+static int next_press_callback = 0;
 
-static void (*releasecallbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
-static int nextreleasecallback = 0;
+static void (*release_callbacks[MAX_EVENT_CALLBACKS])(enum keycode keycode);
+static int next_release_callback = 0;
 
 static inline bool is_press(uint8_t scancode)
 {
@@ -136,22 +136,22 @@ static inline bool is_release(uint8_t scancode)
 void ps2_key_event(uint8_t scancode)
 {
         if (is_press(scancode)) {
-                for (int i = 0; i < nextpresscallback; ++i)
-                        presscallbacks[i](keymap[scancode]);
+                for (int i = 0; i < next_press_callback; ++i)
+                        press_callbacks[i](key_map[scancode]);
         } else if (is_release(scancode)) {
-                for (int i = 0; i < nextreleasecallback; ++i)
-                        releasecallbacks[i](keymap[scancode - 0x80]);
+                for (int i = 0; i < next_release_callback; ++i)
+                        release_callbacks[i](key_map[scancode - 0x80]);
         }
 }
 
 void add_ps2_key_press_callback(void (*callback)(enum keycode keycode))
 {
-        presscallbacks[nextpresscallback] = callback;
-        ++nextpresscallback;
+        press_callbacks[next_press_callback] = callback;
+        ++next_press_callback;
 }
 
 void add_ps2_key_release_callback(void (*callback)(enum keycode keycode))
 {
-        releasecallbacks[nextreleasecallback] = callback;
-        ++nextreleasecallback;
+        release_callbacks[next_release_callback] = callback;
+        ++next_release_callback;
 }

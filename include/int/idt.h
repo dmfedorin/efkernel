@@ -18,7 +18,7 @@ enum int_desc_gate_type {
         INT_DESC_GATE_TYPE_TRAP = 0x8f,
 };
 
-void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gatetype,
+void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gate_type,
                        void (*isr)(const struct int_frame *frame));
 
 #endif

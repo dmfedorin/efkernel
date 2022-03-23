@@ -7,9 +7,9 @@
 #define IDT_SIZE 256
 
 struct int_desc {
-        uint16_t offsetlow, selector;
-        uint8_t _zero, typeattr;
-        uint16_t offsethigh;
+        uint16_t offset_low, selector;
+        uint8_t _zero, type_attr;
+        uint16_t offset_high;
 } __attribute__((packed));
 
 static struct int_desc idt[IDT_SIZE];
@@ -18,10 +18,10 @@ void init_idt_default(void)
 {
         for (int i = 0; i < IDT_SIZE; ++i) {
                 idt[i] = (struct int_desc){
-                        .offsethigh = OFFSET_HIGH(default_isr),
-                        .offsetlow = OFFSET_LOW(default_isr),
+                        .offset_high = OFFSET_HIGH(default_isr),
+                        .offset_low = OFFSET_LOW(default_isr),
                         .selector = KERNEL_CODE_SEG,
-                        .typeattr = INT_DESC_GATE_TYPE_INT,
+                        .type_attr = INT_DESC_GATE_TYPE_INT,
                         ._zero = 0,
                 };
         }
@@ -45,10 +45,10 @@ void load_idt(void)
         log_info("loaded idt");
 }
 
-void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gatetype,
+void set_idt_entry_isr(enum idt_entry ent, enum int_desc_gate_type gate_type,
                        void (*isr)(const struct int_frame *frame))
 {
-        idt[ent].offsethigh = OFFSET_HIGH(isr);
-        idt[ent].offsetlow = OFFSET_LOW(isr);
-        idt[ent].typeattr = gatetype;
+        idt[ent].offset_high = OFFSET_HIGH(isr);
+        idt[ent].offset_low = OFFSET_LOW(isr);
+        idt[ent].type_attr = gate_type;
 }
