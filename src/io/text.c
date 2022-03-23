@@ -1,5 +1,7 @@
 #include "io/text.h"
 
+#include "libc/string.h"
+
 #define VID_MEM_PTR ((char *)0xb8000)
 #define TERM_WIDTH 80
 #define TERM_HEIGHT 25
@@ -32,6 +34,8 @@ void put_char(char c)
                 ++cursorpos;
                 break;
         }
+        if (cursorpos > TERM_WIDTH * TERM_HEIGHT)
+                scroll_text_down();
 }
 
 void put_str(const char *s)
@@ -103,10 +107,19 @@ void set_text_attr(enum text_color fg, enum text_color bg)
 
 enum text_color text_bg_color(void)
 {
-        return attr & 0xf0;
+        return attr >> 4;
 }
 
 enum text_color text_fg_color(void)
 {
         return attr & 0xf;
+}
+
+/* scrolling will lose information */
+void scroll_text_down(void)
+{
+        memmove(VID_MEM_PTR, VID_MEM_PTR + TERM_WIDTH * 2,
+                TERM_WIDTH * TERM_HEIGHT * 2 + 1);
+        cursorpos -= TERM_WIDTH;
+        backstoppos -= TERM_WIDTH;
 }

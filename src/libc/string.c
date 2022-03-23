@@ -66,3 +66,9 @@ int strcmp(const char *restrict s1, const char *restrict s2)
         }
         return 0;
 }
+
+void memmove(void *dst, const void *src, int size)
+{
+        for (int i = 0; i < size; ++i)
+                *((uint8_t *)dst + i) = *((uint8_t *)src + i);
+}

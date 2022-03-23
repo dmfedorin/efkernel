@@ -36,5 +36,6 @@ enum text_color {
 void set_text_attr(enum text_color fg, enum text_color bg);
 enum text_color text_bg_color(void);
 enum text_color text_fg_color(void);
+void scroll_text_down(void); /* scrolling will lose information */
 
 #endif
