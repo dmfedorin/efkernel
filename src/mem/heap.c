@@ -69,6 +69,26 @@ void *alloc_heap_mem(int size)
         return seg_body;
 }
 
+static struct segment_header *find_header_of_allocation(const void *ptr)
+{
+        struct segment_header *seg;
+        for (seg = first_seg; seg != NULL; seg = seg->next) {
+                uintptr_t seg_base = (uintptr_t)seg + sizeof(*seg);
+                bool correct_hdr = mem_regions_collide((const void *)seg_base,
+                                                       seg->size, ptr, 0);
+                if (correct_hdr)
+                        return seg;
+        }
+        return NULL;
+}
+
 void dealloc_heap_mem(const void *ptr)
 {
+        struct segment_header *seg = find_header_of_allocation(ptr);
+        if (seg == NULL)
+                return;
+        if (seg->prev != NULL)
+                seg->prev->next = seg->next;
+        if (seg->next != NULL)
+                seg->next->prev = seg->prev;
 }

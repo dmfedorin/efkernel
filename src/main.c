@@ -3,10 +3,13 @@ __asm__("jmp main\n");
 
 #include "kernel.h"
 #include "shell/shell.h"
+#include "mem/heap.h"
+#include "io/text.h"
 
 void main(void)
 {
         init_kernel();
+        test_heap();
         init_shell();
         run_shell();
 }
