@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 void print_mem_layout(void);
-bool is_free_in_mem_layout(const void *addr, int size);
+bool is_free_in_mem_layout(const void *ptr, int size);
 void init_mem_layout(void);
 
 struct mem_layout_entry {
@@ -14,5 +14,7 @@ struct mem_layout_entry {
 };
 
 const struct mem_layout_entry *free_mem_layout_entries(void);
+bool mem_regions_collide(const void *base_0, int size_0, const void *base_1,
+                         int size_1);
 
 #endif

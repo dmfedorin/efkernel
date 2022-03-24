@@ -56,13 +56,13 @@ void print_mem_layout(void)
 static struct mem_layout_entry free_lay_ents[MAX_FREE_LAYOUT_ENTRIES] = { 0 };
 static int next_free_lay_ent = 0;
 
-bool is_free_in_mem_layout(const void *addr, int size)
+bool is_free_in_mem_layout(const void *ptr, int size)
 {
         for (int i = 0; i < next_free_lay_ent; ++i) {
-                uint32_t ent_end = free_lay_ents[i].base
-                                   + free_lay_ents[i].size;
-                bool free = (uint32_t)addr >= free_lay_ents[i].base
-                            && (uint32_t)addr + size <= ent_end;
+                uintptr_t ent_base = free_lay_ents[i].base;
+                bool free = mem_regions_collide((const void *)ent_base,
+                                                free_lay_ents[i].size, ptr,
+                                                size);
                 if (free)
                         return true;
         }
@@ -101,4 +101,11 @@ void init_mem_layout(void)
 const struct mem_layout_entry *free_mem_layout_entries(void)
 {
         return free_lay_ents;
+}
+
+bool mem_regions_collide(const void *base_0, int size_0, const void *base_1,
+                         int size_1)
+{
+        return (uintptr_t)base_0 + size_0 >= (uintptr_t)base_1
+               && (uintptr_t)base_0 <= (uintptr_t)base_1 + size_1;
 }
