@@ -9,7 +9,6 @@ __asm__("jmp main\n");
 void main(void)
 {
         init_kernel();
-        test_heap();
         init_shell();
         run_shell();
 }
